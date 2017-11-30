@@ -2,17 +2,18 @@
 #ifndef LISTA_H
 #define LISTA_H
 
-typedef struct lista Lista;
 typedef struct celula Celula;
+typedef struct lista Lista;
 
 Lista* inic_lista();
 Celula* nova_celula(Arv* arv);
-Celula* lista_retira_prim(Lista* l);
-int lista_vazia(Lista* l);
+void retira_2_prim(Lista* l);
 void libera_celula(Celula* c);
 void lista_insere(Lista* l, Celula* nova);
 void ordena_lista(Lista* l);
 void troca_arv(Celula* p, Celula* q);
+int tam_lista(Lista* l);
+void faz_arv_huffman(Lista* lista);
 
 #endif /* LISTA_H */
 

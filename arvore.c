@@ -14,7 +14,7 @@ struct arvore {
     };
 };
 
-Arv* cria_arvvazia() {
+Arv* cria_arv_vazia() {
     return NULL;
 }
 
@@ -49,7 +49,6 @@ Arv* cria_caracter(unsigned char c, Arv* dir, Arv* esq) {
     return novo;
 }
 
-int retorna_freq(Arv* a) {
-    return a->dir->freq;
+int arv_freq(Arv* a){
+    return a->freq;
 }
-
