@@ -81,5 +81,6 @@ void faz_arv_huffman(Lista* lista){
         Celula* nova_cel = nova_celula(novo_ramo);
         retira_2_prim(lista);
         lista_insere(lista, nova_cel);
+        ordena_lista(lista);
     }
 }
