@@ -3,6 +3,12 @@
 #include <string.h>
 #include "compactador.h"
 
+struct chave{
+    unsigned char c;
+    bitmap bin;
+};
+
+
 int tam_arq(FILE* file){
     fseek(file,0,SEEK_END);
     int tam = ftell(file);

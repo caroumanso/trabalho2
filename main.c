@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     faz_lista(vet, TAM, lista);
     ordena_lista(lista);
     faz_arv_huffman(lista);
-    
+    Chave vet_chave[qtd_folhas(lista->ini->arvore)];
     return (EXIT_SUCCESS);
 }
 void inic_vet(int* vet, int tam) {

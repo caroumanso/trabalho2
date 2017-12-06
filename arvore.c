@@ -49,6 +49,14 @@ Arv* cria_caracter(unsigned char c, Arv* dir, Arv* esq) {
     return novo;
 }
 
-int arv_freq(Arv* a){
+int arv_freq(Arv* a) {
     return a->freq;
+}
+
+int qtd_folhas(Arv* arv) {
+    if (arv == NULL)
+        return 0;
+    if (arv->dir == NULL && arv->esq == NULL)
+        return 1;
+    else return (qtd_folhas(arv->dir) + qtd_folhas(arv->esq));
 }
