@@ -28,3 +28,13 @@ void soma_freq(int* vet, unsigned char* buffer) {
     for (i = 0; strlen(buffer) > i; i++)
         vet[(int)buffer[i]]++;
 }
+
+void init_chave_busca(Chave* vet_chave, int qtd){
+    int i;
+    for(i = 0; qtd>i; i++)
+        vet_chave[i].bin = bitmapInit(8);
+    /* ai a partir de agr colocaria cada folha(caracter) no vetor 
+     * e seu respectivo caminho no bit map
+     esse vetor funcionaria como uma chave de busca
+     ai dps e so ler o buffer dnv e fazer o arquivo de saida*/
+}
