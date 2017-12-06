@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "compactador.h"
 
 int tam_arq(FILE* file){
@@ -16,3 +17,8 @@ unsigned char* le_arq(FILE* file){
     return buffer;
 }
 
+void soma_freq(int* vet, unsigned char* buffer) {
+    int i;
+    for (i = 0; strlen(buffer) > i; i++)
+        vet[(int)buffer[i]]++;
+}

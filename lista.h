@@ -14,6 +14,7 @@ void ordena_lista(Lista* l);
 void troca_arv(Celula* p, Celula* q);
 int tam_lista(Lista* l);
 void faz_arv_huffman(Lista* lista);
+void faz_lista(int *vet, int tam, Lista* l);
 
 #endif /* LISTA_H */
 

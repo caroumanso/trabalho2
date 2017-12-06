@@ -84,3 +84,14 @@ void faz_arv_huffman(Lista* lista){
         ordena_lista(lista);
     }
 }
+
+void faz_lista(int *vet, int tam, Lista* l) {
+    int i;
+    for (i = 0; tam > i; i++) {
+        if (vet[i] != 0) {
+            Arv* carac = cria_arv(vet[i], cria_caracter(i, cria_arv_vazia(), cria_arv_vazia()), cria_arv_vazia());
+            Celula* celula = nova_celula(carac);
+            lista_insere(l, celula);
+        }
+    }
+}
