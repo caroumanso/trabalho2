@@ -56,7 +56,7 @@ void compacta(Chave* vet_chave, int qtd, unsigned char* buffer) {
         exit(1);
     }
     for (i = 0; strlen(buffer) > i; i++)
-        fwrite(retorna_chave(buffer[i], vet_chave, qtd), sizeof (), 1, saida);
+        fwrite(retorna_chave(buffer[i], vet_chave, qtd), sizeof(unsigned char),bitmapGetLength() , saida);
     fclose(saida);
 }
 
