@@ -13,7 +13,11 @@ int main(int argc, char** argv) {
     inic_vet(vet, TAM);
     char caminho[110];
     strcpy(caminho, argv[1]);
-    FILE* arq = fopen(caminho, "rb");
+    FILE* arq;
+    if ((arq = fopen(caminho, "rb")) == NULL) {
+        printf("erro na abertura do arquivo de entrada\n");
+        exit(1);
+    }
     unsigned char* buffer = le_arq(arq);
     soma_freq(vet, buffer);
     Lista* lista = inic_lista();
@@ -22,10 +26,12 @@ int main(int argc, char** argv) {
     faz_arv_huffman(lista);
     int folhas = qtd_folhas(lista->ini->arvore);
     Chave vet_chave[folhas];
-    init_chave_busca(vet_chave, folhas);
-    
+    faz_chave_busca(vet_chave, folhas, lista->ini->arvore, vet, TAM);
+    compacta(vet_chave, folhas, buffer);
+    libera_compacta(lista, buffer, vet_chave, folhas);
     return (EXIT_SUCCESS);
 }
+
 void inic_vet(int* vet, int tam) {
     int i;
     for (i = 0; tam > i; i++)

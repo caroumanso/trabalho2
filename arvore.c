@@ -22,7 +22,7 @@ int arv_vazia(Arv* a) {
     return a == NULL;
 }
 
-Arv* libera_arv(Arv* a) {
+void libera_arv(Arv* a) {
     if (!arv_vazia(a)) {
         libera_arv(a->dir);
         libera_arv(a->esq);
