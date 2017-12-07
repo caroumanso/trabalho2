@@ -55,8 +55,10 @@ void compacta(Chave* vet_chave, int qtd, unsigned char* buffer) {
         printf("erro na abertura do arquivo de saida\n");
         exit(1);
     }
-    for (i = 0; strlen(buffer) > i; i++)
-        fwrite(retorna_chave(buffer[i], vet_chave, qtd), sizeof(unsigned char),bitmapGetLength() , saida);
+    for (i = 0; strlen(buffer) > i; i++){
+        bitmap cod = retorna_bm(buffer[i], vet_chave, qtd);
+        fwrite(bitmapGetContents(cod), sizeof(unsigned char),bitmapGetLength(cod) , saida); //rever isso aq
+    }
     fclose(saida);
 }
 
@@ -85,3 +87,10 @@ void ordena_por_caracter(Chave* vet_chave, int qtd) {
     }
 }
 
+bitmap retorna_bm(unsigned char c, Chave* vet_chave, int qtd){
+    int i;
+    for(i = 0; qtd>i;i++){      //pensar em uma forma mais eficiente talvez
+        if(vet_chave[i].c == c) //se for deixar assim n precisa da ordena por caracter
+            return vet_chave[i].bin;
+    }        
+}
