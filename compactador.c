@@ -29,7 +29,7 @@ void soma_freq(int* vet, unsigned char* buffer) {
         vet[(int) buffer[i]]++;
 }
 
-void codifica(Chave cod, unsigned char c, Arv* arv) {
+void codifica(Chave *cod, unsigned char c, Arv* arv) {
     if (arv->dir == NULL && arv->esq == NULL) {
 
     }
@@ -41,7 +41,7 @@ void faz_chave_busca(Chave* vet_chave, int folhas, Arv* arv, int vet, int qtd_ch
         vet_chave[i].bin = bitmapInit(8);
     for (i = 0; qtd_char > i; i++) {
         if (vet[i] != 0) {
-            codifica(vet_chave[count], (unsigned char) qtd_char, arv);
+            codifica(&vet_chave[count], (unsigned char) qtd_char, arv);
             count++;
         }
     }
