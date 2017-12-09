@@ -50,3 +50,11 @@ void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer) {
     fclose(saida);
 }
 
+void libera_compacta(Lista* l, unsigned char* buffer, bitmap *vet_bm){
+    int i;
+    for(i = 0;strlen(buffer)>i;i++)
+        free(vet_bm[buffer[i]].contents);
+    libera_lista(l);
+    free(buffer);
+    
+}

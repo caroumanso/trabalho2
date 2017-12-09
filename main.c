@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     bitmap vet_bm[TAM];
     faz_chave_busca(vet_bm, retorna_arv(lista), vet, TAM);
     compacta(vet_bm, TAM, buffer);
-
+    libera_compacta(lista, buffer, vet_bm);
     return (EXIT_SUCCESS);
 }
 
