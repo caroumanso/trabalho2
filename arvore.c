@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arvore.h"
-#define NUM 0
-#define CAR 1
 
 struct arvore {
     Arv* dir;
@@ -38,8 +36,6 @@ Arv* cria_arv(int num, Arv* dir, Arv* esq) {
     nova->freq = num;
     return nova;
 }
-
-//a frequencia do caracter entra no ramo da direita
 
 Arv* cria_caracter(unsigned char c, Arv* dir, Arv* esq) {
     Arv* novo = (Arv*) malloc(sizeof (Arv));

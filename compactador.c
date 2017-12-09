@@ -5,6 +5,7 @@
 #include "compactador.h"
 #include "bitmap.h"
 #include "lista.h"
+
 int tam_arq(FILE* file) {
     fseek(file, 0, SEEK_END);
     int tam = ftell(file);
@@ -31,10 +32,9 @@ void codifica(bitmap *cod, unsigned char c, Arv* arv) {
 void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
     int i;
     for (i = 0; tam > i; i++) {
-        if (vet[i] != 0) {
-            vet_bm[i] = bitmapInit(8);
-            codifica(&vet_bm[i], (unsigned char)i, arv);
-        }
+        vet_bm[i] = bitmapInit(8);
+        if (vet[i] != 0)
+            codifica(&vet_bm[i], (unsigned char) i, arv);
     }
 }
 
@@ -46,15 +46,14 @@ void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer) {
         exit(1);
     }
     for (i = 0; strlen(buffer) > i; i++)
-        fwrite(bitmapGetContents(vet_bm[buffer[i]]), sizeof(unsigned char),bitmapGetLength(vet_bm[buffer[i]]) , saida);
+        fwrite(bitmapGetContents(vet_bm[buffer[i]]), sizeof (unsigned char), bitmapGetLength(vet_bm[buffer[i]]), saida);
     fclose(saida);
 }
 
-void libera_compacta(Lista* l, unsigned char* buffer, bitmap *vet_bm){
+void libera_compacta(Lista* l, unsigned char* buffer, bitmap *vet_bm) {
     int i;
-    for(i = 0;strlen(buffer)>i;i++)
-        free(vet_bm[buffer[i]].contents);
+    for (i = 0; strlen(buffer) > i; i++)
+        free(vet_bm[i].contents);
     libera_lista(l);
     free(buffer);
-    
 }
