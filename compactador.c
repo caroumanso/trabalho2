@@ -1,14 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "compactador.h"
 #include "bitmap.h"
-
-struct chave {
-    unsigned char c;
-    bitmap bin;
-};
-
+#include "lista.h"
 int tam_arq(FILE* file) {
     fseek(file, 0, SEEK_END);
     int tam = ftell(file);
@@ -29,68 +25,28 @@ void soma_freq(int* vet, unsigned char* buffer) {
         vet[(int) buffer[i]]++;
 }
 
-void codifica(Chave *cod, unsigned char c, Arv* arv) {
-    if (arv->dir == NULL && arv->esq == NULL) {
-
-    }
+void codifica(bitmap *cod, unsigned char c, Arv* arv) {
 }
 
-void faz_chave_busca(Chave* vet_chave, int folhas, Arv* arv, int vet, int qtd_char) {
-    int i, count = 0;
-    for (i = 0; folhas > i; i++)
-        vet_chave[i].bin = bitmapInit(8);
-    for (i = 0; qtd_char > i; i++) {
+void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
+    int i;
+    for (i = 0; tam > i; i++) {
         if (vet[i] != 0) {
-            codifica(&vet_chave[count], (unsigned char) qtd_char, arv);
-            count++;
+            vet_bm[i] = bitmapInit(8);
+            codifica(&vet_bm[i], (unsigned char)i, arv);
         }
     }
-    ordena_por_caracter(vet_chave, folhas);
 }
 
-void compacta(Chave* vet_chave, int qtd, unsigned char* buffer) {
+void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer) {
     int i;
     FILE* saida;
     if ((saida = fopen("colocar_o_caminho.comp", "wb")) == NULL) {
         printf("erro na abertura do arquivo de saida\n");
         exit(1);
     }
-    for (i = 0; strlen(buffer) > i; i++){
-        bitmap cod = retorna_bm(buffer[i], vet_chave, qtd);
-        fwrite(bitmapGetContents(cod), sizeof(unsigned char),bitmapGetLength(cod) , saida); //rever isso aq
-    }
+    for (i = 0; strlen(buffer) > i; i++)
+        fwrite(bitmapGetContents(vet_bm[buffer[i]]), sizeof(unsigned char),bitmapGetLength(vet_bm[buffer[i]]) , saida);
     fclose(saida);
 }
 
-void libera_compacta(Lista* l, unsigned char* buffer, Chave* vet_chave, int qtd) {
-    libera_lista(l);
-    free(buffer);
-    libera_bm(vet_chave, qtd);
-}
-
-void libera_bm(Chave* vet_chave, int qtd) {
-    int i;
-    for (i = 0; qtd > i; i++)
-        free(vet_chave[i].bin.contents);
-}
-
-void ordena_por_caracter(Chave* vet_chave, int qtd) {
-    int i, j;
-    for (i = 0; qtd > i; i++) {
-        for (j = i + 1; qtd > i; j++) {
-            if (vet_chave[i].c > vet_chave[j].c) {
-                unsigned char aux = vet_chave[i].c;
-                vet_chave[i].c = vet_chave[j].c;
-                vet_chave[j].c = aux;
-            }
-        }
-    }
-}
-
-bitmap retorna_bm(unsigned char c, Chave* vet_chave, int qtd){
-    int i;
-    for(i = 0; qtd>i;i++){      //pensar em uma forma mais eficiente talvez
-        if(vet_chave[i].c == c) //se for deixar assim n precisa da ordena por caracter
-            return vet_chave[i].bin;
-    }        
-}

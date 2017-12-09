@@ -16,5 +16,7 @@ int tam_lista(Lista* l);
 void faz_arv_huffman(Lista* lista);
 void faz_lista(int *vet, int tam, Lista* l);
 void libera_lista(Lista* l);
+Arv* retorna_arv(Lista* l);
+
 #endif /* LISTA_H */
 

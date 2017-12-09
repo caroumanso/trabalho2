@@ -101,3 +101,7 @@ void libera_lista(Lista* l) {
     free(l->ini);
     free(l);
 }
+
+Arv* retorna_arv(Lista* l){
+    return l->ini->arvore;
+}

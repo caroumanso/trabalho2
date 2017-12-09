@@ -24,11 +24,10 @@ int main(int argc, char** argv) {
     faz_lista(vet, TAM, lista);
     ordena_lista(lista);
     faz_arv_huffman(lista);
-    int folhas = qtd_folhas(lista->ini->arvore);
-    Chave vet_chave[folhas];
-    faz_chave_busca(vet_chave, folhas, lista->ini->arvore, vet, TAM);
-    compacta(vet_chave, folhas, buffer);
-    libera_compacta(lista, buffer, vet_chave, folhas);
+    bitmap vet_bm[TAM];
+    faz_chave_busca(vet_bm, retorna_arv(lista), vet, TAM);
+    compacta(vet_bm, TAM, buffer);
+
     return (EXIT_SUCCESS);
 }
 
