@@ -56,3 +56,6 @@ int qtd_folhas(Arv* arv) {
         return 1;
     else return (qtd_folhas(arv->dir) + qtd_folhas(arv->esq));
 }
+int eh_folha(Arv* arv){
+    return (arv->dir == NULL && arv->esq == NULL);
+}

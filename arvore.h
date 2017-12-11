@@ -9,6 +9,6 @@ int arv_vazia(Arv* a);
 void libera_arv(Arv* a);
 int arv_freq(Arv* a);
 int qtd_folhas(Arv* arv);
+int eh_folha(Arv* arv);
 
 #endif /* ARVORE_H */
-
