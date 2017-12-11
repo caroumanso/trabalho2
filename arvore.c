@@ -59,3 +59,11 @@ int qtd_folhas(Arv* arv) {
 int eh_folha(Arv* arv){
     return (arv->dir == NULL && arv->esq == NULL);
 }
+
+Arv* retorna_ramoEsq(Arv* arv){
+    return arv->esq;
+}
+
+Arv* retorna_ramoDir(Arv* arv){
+    return arv->dir;
+}

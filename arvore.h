@@ -10,5 +10,7 @@ void libera_arv(Arv* a);
 int arv_freq(Arv* a);
 int qtd_folhas(Arv* arv);
 int eh_folha(Arv* arv);
+Arv* retorna_ramoEsq(Arv* arv);
+Arv* retorna_ramoDir(Arv* arv);
 
 #endif /* ARVORE_H */
