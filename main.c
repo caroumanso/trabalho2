@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     faz_arv_huffman(lista);
     bitmap vet_bm[TAM];
     faz_chave_busca(vet_bm, retorna_arv(lista), vet, TAM);
-    compacta(vet_bm, TAM, buffer);
+    compacta(vet_bm, TAM, buffer, retorna_arv(lista));
     libera_compacta(lista, buffer, vet_bm);
     return (EXIT_SUCCESS);
 }

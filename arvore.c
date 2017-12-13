@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arvore.h"
+#include "bitmap.h"
 
 struct arvore {
     Arv* dir;
@@ -49,21 +50,27 @@ int arv_freq(Arv* a) {
     return a->freq;
 }
 
-int qtd_folhas(Arv* arv) {
-    if (arv == NULL)
-        return 0;
-    if (arv->dir == NULL && arv->esq == NULL)
-        return 1;
-    else return (qtd_folhas(arv->dir) + qtd_folhas(arv->esq));
-}
-int eh_folha(Arv* arv){
-    return (arv->dir == NULL && arv->esq == NULL);
+int eh_no_de_folha(Arv* arv) {
+    return (arv->dir->dir == NULL && arv->dir->esq == NULL);
 }
 
-Arv* retorna_ramoEsq(Arv* arv){
-    return arv->esq;
+unsigned char retorna_caracter(Arv* arv) {
+    return arv->dir->caracter;
 }
 
-Arv* retorna_ramoDir(Arv* arv){
-    return arv->dir;
+void faz_caminho_arv(Arv* arv, FILE* saida, bitmap bm_arv) {
+    if (bitmapGetMaxSize(bm_arv) == bitmapGetLength(bm_arv)) {
+        escreve_bm(bm_arv, saida);
+        libera_bm(bm_arv);
+        bm_arv = bitmapInit(2048);
+    }
+    if (eh_no_de_folha(arv)) {
+        fprintf(saida, "1");
+        fprintf(saida, "%d", retorna_caracter(arv));
+    }
+    else if (!arv_vazia(arv)) {
+        fprintf(saida, "0");
+        faz_caminho_arv(arv->esq, saida, bm_arv);
+        faz_caminho_arv(arv->dir, saida, bm_arv);
+    }
 }

@@ -22,11 +22,11 @@ unsigned char* le_arq(FILE* file) {
 
 void soma_freq(int* vet, unsigned char* buffer) {
     int i;
-    for (i = 0; strlen(buffer) > i; i++)
+    for (i = 0; strlen(buffer) - 1 > i; i++)
         vet[(int) buffer[i]]++;
 }
 
-void codifica(bitmap *cod, unsigned char c, Arv* arv) {
+void codifica(bitmap cod, unsigned char c, Arv* arv) {
 }
 
 void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
@@ -34,26 +34,40 @@ void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
     for (i = 0; tam > i; i++) {
         vet_bm[i] = bitmapInit(8);
         if (vet[i] != 0)
-            codifica(&vet_bm[i], (unsigned char) i, arv);
+            codifica(vet_bm[i], (unsigned char) i, arv);
     }
 }
 
-void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer) {
+void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer, Arv* arv) {
     int i;
     FILE* saida;
-    if ((saida = fopen("colocar_o_caminho.comp", "wb")) == NULL) {
+    if ((saida = fopen("colocar_o_caminho.txt", "w")) == NULL) {
         printf("erro na abertura do arquivo de saida\n");
         exit(1);
     }
-    for (i = 0; strlen(buffer) > i; i++)
-        fwrite(bitmapGetContents(vet_bm[buffer[i]]), sizeof (unsigned char), bitmapGetLength(vet_bm[buffer[i]]), saida);
+    bitmap bm_arv = bitmapInit(2048);
+    faz_caminho_arv(arv, saida, bm_arv);
+    escreve_bm(bm_arv, saida);
+    libera_bm(bm_arv);
+    for (i = 0; strlen(buffer) - 1 > i; i++)
+        escreve_bm(vet_bm[buffer[i]], saida);
     fclose(saida);
 }
 
 void libera_compacta(Lista* l, unsigned char* buffer, bitmap *vet_bm) {
     int i;
-    for (i = 0; strlen(buffer) > i; i++)
-        free(vet_bm[i].contents);
+    for (i = 0; 256 > i; i++)
+        libera_bm(vet_bm[i]);
     libera_lista(l);
     free(buffer);
+}
+
+void libera_bm(bitmap bm) {
+    if (bitmapGetContents(bm) != NULL)
+        free(bitmapGetContents(bm));
+}
+
+void escreve_bm(bitmap bm, FILE* saida) {
+    if (bitmapGetLength(bm) != 0)
+        fwrite(bitmapGetContents(bm), sizeof (unsigned char), bitmapGetLength(bm), saida);
 }
