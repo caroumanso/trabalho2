@@ -26,7 +26,7 @@ void soma_freq(int* vet, unsigned char* buffer) {
         vet[(int) buffer[i]]++;
 }
 
-void codifica(bitmap cod, unsigned char c, Arv* arv) {
+void codifica(bitmap *cod, unsigned char c, Arv* arv) {
 }
 
 void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
@@ -34,7 +34,7 @@ void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
     for (i = 0; tam > i; i++) {
         vet_bm[i] = bitmapInit(8);
         if (vet[i] != 0)
-            codifica(vet_bm[i], (unsigned char) i, arv);
+            codifica(&vet_bm[i], (unsigned char) i, arv);
     }
 }
 
