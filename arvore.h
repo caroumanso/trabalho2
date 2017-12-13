@@ -13,5 +13,7 @@ int arv_freq(Arv* a);
 int eh_no_de_folha(Arv* arv);
 unsigned char retorna_caracter(Arv* arv);
 void faz_caminho_arv(Arv* arv, FILE* saida, bitmap bm_arv);
+Arv* retorna_arv_esq(Arv* arv);
+Arv* retorna_arv_dir(Arv* arv);
 
 #endif /* ARVORE_H */

@@ -28,7 +28,7 @@ void libera_arv(Arv* a) {
         libera_arv(a->esq);
         free(a);
     }
-    return NULL;
+    return;
 }
 
 Arv* cria_arv(int num, Arv* dir, Arv* esq) {
@@ -73,4 +73,12 @@ void faz_caminho_arv(Arv* arv, FILE* saida, bitmap bm_arv) {
         faz_caminho_arv(arv->esq, saida, bm_arv);
         faz_caminho_arv(arv->dir, saida, bm_arv);
     }
+}
+
+Arv* retorna_arv_esq(Arv* arv){
+    return arv->esq;
+}
+
+Arv* retorna_arv_dir(Arv* arv){
+    return arv->dir;
 }
