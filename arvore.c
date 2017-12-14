@@ -59,17 +59,17 @@ unsigned char retorna_caracter(Arv* arv) {
     return arv->dir->caracter;
 }
 
-void faz_caminho_arv(Arv* arv, FILE* saida, bitmap bm_arv) {
-    if (bitmapGetMaxSize(bm_arv) == bitmapGetLength(bm_arv)) {
-        escreve_bm(bm_arv, saida);
-        libera_bm(bm_arv);
-        bm_arv = bitmapInit(2048);
+void faz_caminho_arv(Arv* arv, FILE* saida, bitmap *bm_arv) {
+    if (bitmapGetMaxSize(*bm_arv) == bitmapGetLength(*bm_arv)) {
+        escreve_bm(*bm_arv, saida);
+        libera_bm(&bm_arv);
+        *bm_arv = bitmapInit(2048);
     }
     if (eh_no_de_folha(arv)) {
-        bitmapAppendLeastSignificantBit(&bm_arv, 1);
-        bitmapAppendLeastSignificantBit(&bm_arv, retorna_caracter(arv));
+        bitmapAppendLeastSignificantBit(bm_arv, 1);
+        bitmapAppendLeastSignificantBit(bm_arv, retorna_caracter(arv));
     } else if (!arv_vazia(arv)) {
-        bitmapAppendLeastSignificantBit(&bm_arv, 0);
+        bitmapAppendLeastSignificantBit(bm_arv, 0);
         faz_caminho_arv(arv->esq, saida, bm_arv);
         faz_caminho_arv(arv->dir, saida, bm_arv);
     }
