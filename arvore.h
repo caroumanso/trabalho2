@@ -15,5 +15,6 @@ unsigned char retorna_caracter(Arv* arv);
 void faz_caminho_arv(Arv* arv, FILE* saida, bitmap *bm_arv);
 Arv* retorna_arv_esq(Arv* arv);
 Arv* retorna_arv_dir(Arv* arv);
+bitmap* inverteBitmap( bitmap *bm);
 
 #endif /* ARVORE_H */

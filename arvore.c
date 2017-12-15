@@ -82,3 +82,18 @@ Arv* retorna_arv_esq(Arv* arv){
 Arv* retorna_arv_dir(Arv* arv){
     return arv->dir;
 }
+
+bitmap* inverteBitmap( bitmap *bm){
+    int tam = bitmapGetLenght;
+    int i = 0;
+    bitmap *b;
+    unsigned char c;
+    
+    b = bitmapInit(tam);
+    for(i = tam-1;j = 0; i >= 0; i --;j++){
+        c = bitmapGetBit(bm, i);
+        bitmapSetBit(b, j, c);
+    }
+    
+    return b;
+}
