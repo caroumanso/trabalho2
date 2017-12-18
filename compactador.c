@@ -49,9 +49,10 @@ void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
         vet_bm[i] = bitmapInit(10);
         if (vet[i] != 0) {
             codifica(&vet_bm[i], i, arv);
-            inverte_bm(vet_bm[i]);
+            inverte_bm(&vet_bm[i]);
         }
     }
+}
 
     void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer, Arv* arv, int* vet_freq) {
         int i;
@@ -77,18 +78,20 @@ void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
     }
 
     void libera_bm(bitmap bm) {
-        if (bitmapGetContents(bm) != NULL)
-            free(bitmapGetContents(bm));
+        //if (bitmapGetContents(bm) != NULL)
+            //free(bm.contents);
     }
 
     void escreve_bm(bitmap bm, FILE * saida) {
         fwrite(bitmapGetContents(bm), sizeof (unsigned char), bitmapGetLength(bm), saida);
     }
 
-    void inverte_bm(bitmap bm) {
+    void inverte_bm(bitmap *bm) {
         int i;
-        unsigned char aux[bitmapGetLength(bm)];
-        for(i = 0; bitmapGetLength(bm)>i;i++)
-            aux[i] = bm.contents[bitmapGetLength(bm)-i];
-        strcpy(bm.contents, aux);
+        bitmap aux = bitmapInit(bitmapGetMaxSize(*bm));
+        aux.length = bitmapGetLength(*bm);
+        aux.contents = bitmapGetContents(*bm);
+        for(i = 0; bitmapGetLength(*bm)>i;i++)
+            bitmapSetBit(bm, i, bitmapGetBit(aux, bitmapGetLength(aux)-1-i));
+        libera_bm(aux);
     }
