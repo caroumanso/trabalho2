@@ -57,12 +57,17 @@ void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
     void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer, Arv* arv, int* vet_freq) {
         int i;
         FILE* saida;
-        if ((saida = fopen("colocar_o_caminho.comp", "wb")) == NULL) {
+        if ((saida = fopen("colocar_o_caminho.comp", "w")) == NULL) {
             printf("erro na abertura do arquivo de saida\n");
             exit(1);
         }
-        for (i = 0; 256 > i; i++)
-            fwrite(&vet_freq[i], sizeof (int), 1, saida);
+        for (i = 0; 256 > i; i++){
+            if(vet_freq[i] != 0){
+                fprintf(saida, "%d %d ", i, vet_freq[i]);
+            }
+
+        }
+
 
         for (i = 0; strlen(buffer) > i; i++)
             escreve_bm(vet_bm[buffer[i]], saida);
@@ -83,6 +88,7 @@ void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
     }
 
     void escreve_bm(bitmap bm, FILE * saida) {
+        
         fwrite(bitmapGetContents(bm), sizeof (unsigned char), bitmapGetLength(bm), saida);
     }
 
