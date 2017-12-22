@@ -73,13 +73,14 @@ void compacta(int qtd, unsigned char* buffer, Arv* arv, int* vet_freq, char* arg
         printf("erro na abertura do arquivo de saida\n");
         exit(1);
     }
-    int tam_argv = strlen(argv);
-    fwrite(&tam_argv, sizeof(int), 1, saida);
-    fwrite(argv, sizeof(char), strlen(argv), saida);
-    bitmap bm_arv = bitmapInit(1024*1024);
-    faz_caminho_arv(arv, saida, &bm_arv);
-    if(bitmapGetLength(bm_arv)>0)
-        escreve_bm(bm_arv, saida);
+    char ext[10];
+    extensao(ext, argv);
+    int tam_extensao = strlen(ext);
+    fwrite(&tam_extensao, sizeof (int), 1, saida);
+    fwrite(ext, sizeof (char), tam_extensao, saida);
+    int freq_total = arv->freq;
+    fwrite(&freq_total, sizeof (int), 1, saida);
+    imprime_caracter_freq(arv, saida);
     escreve_tam_arq_compactado(vet_bm, buffer, saida);
     escreve_compacta(vet_bm, buffer, saida);
     libera_compacta(buffer, vet_bm);
@@ -88,8 +89,8 @@ void compacta(int qtd, unsigned char* buffer, Arv* arv, int* vet_freq, char* arg
 
 void libera_compacta(unsigned char* buffer, bitmap * vet_bm) {
     int i;
-     for (i = 0; 256 > i; i++)
-      free(bitmapGetContents(vet_bm[i]));
+    for (i = 0; 256 > i; i++)
+        free(bitmapGetContents(vet_bm[i]));
     free(buffer);
 }
 
@@ -110,60 +111,68 @@ bitmap inverte_bm(bitmap * bm) {
     return aux;
 }
 
-void escreve_compacta(bitmap *vet_bm, unsigned char* buffer, FILE* saida){
+void escreve_compacta(bitmap *vet_bm, unsigned char* buffer, FILE* saida) {
     int i, k;
-    bitmap vet_saida = bitmapInit(12*1024*1024);
+    bitmap vet_saida = bitmapInit(12 * 1024 * 1024);
     for (i = 0; strlen(buffer) > i; i++) {
         for (k = 0; bitmapGetLength(vet_bm[buffer[i]]) > k; k++) {
-            if(bitmapGetMaxSize(vet_saida) == bitmapGetLength(vet_saida)){
+            if (bitmapGetMaxSize(vet_saida) == bitmapGetLength(vet_saida)) {
                 escreve_bm(vet_saida, saida);
                 free(bitmapGetContents(vet_saida));
-                vet_saida = bitmapInit(5*1024*1024);
+                vet_saida = bitmapInit(5 * 1024 * 1024);
             }
             bitmapAppendLeastSignificantBit(&vet_saida, bitmapGetBit(vet_bm[buffer[i]], k));
         }
     }
-    if(bitmapGetLength(vet_saida)>0)
-            escreve_bm(vet_saida, saida);
+    if (bitmapGetLength(vet_saida) > 0) {
+        escreve_bm(vet_saida, saida);
+        free(bitmapGetContents(vet_saida));
+    }
 }
 
-void concatena_saida(char* destino, char* argv){
+void concatena_saida(char* destino, char* argv) {
     int i;
-    for(i = strlen(argv);i>=0;i--){
-        if(argv[i] == '.')
+    for (i = strlen(argv); i >= 0; i--) {
+        if (argv[i] == '.')
             break;
     }
     char aux[100];
     strcpy(aux, argv);
-    aux[i+1] = '\0';
-    sprintf(destino, "%s%s", aux,"comp");
+    aux[i + 1] = '\0';
+    sprintf(destino, "%s%s", aux, "comp");
 }
 
-void faz_caminho_arv(Arv* arv, FILE* saida, bitmap *bm_arv) {
-    
-    if (eh_no_de_folha(arv)) {
-        bitmapAppendLeastSignificantBit(bm_arv, 1);
-        int i;
-        for(i = 7; i>=0;i--){
-            int bt = (retorna_caracter(arv) >> i & 0x01);
-            if(bt == 0)
-                bitmapAppendLeastSignificantBit(bm_arv, 0);
-            else
-                bitmapAppendLeastSignificantBit(bm_arv, 1);
-        }
-    } else if (!arv_vazia(arv)) {
-        bitmapAppendLeastSignificantBit(bm_arv, 0);
-        faz_caminho_arv(retorna_arv_esq(arv), saida, bm_arv);
-        faz_caminho_arv(retorna_arv_dir(arv), saida, bm_arv);
-    }
-}
-
-void escreve_tam_arq_compactado(bitmap *vet_bm, unsigned char* buffer, FILE* saida){
+void escreve_tam_arq_compactado(bitmap *vet_bm, unsigned char* buffer, FILE* saida) {
     int i, k;
     long int tam = 0;
     for (i = 0; strlen(buffer) > i; i++) {
         for (k = 0; bitmapGetLength(vet_bm[buffer[i]]) > k; k++)
             tam++;
     }
-    fwrite(&tam, sizeof(long int), 1, saida);
+    fwrite(&tam, sizeof (long int), 1, saida);
+}
+
+void extensao(char* ext, char* origem) {
+    int i, k;
+    for (i = strlen(origem); i >= 0; i--) {
+        if (origem[i] == '.')
+            break;
+    }
+    i++;
+    for (k = 0; origem[i] != '\0'; k++) {
+        ext[k] = origem[i];
+        i++;
+    }
+    ext[k + 1] = '\0';
+}
+
+void imprime_caracter_freq(Arv* arv, FILE* saida) {
+    if(eh_no_de_folha(arv)){
+        fwrite();
+        fwrite();
+    }
+    else if(!arv_vazia(arv)){
+        imprime_caracter_freq(arv->esq, saida);
+        imprime_caracter_freq(arv->dir, saida);
+    }
 }

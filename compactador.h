@@ -17,8 +17,8 @@ void escreve_bm(bitmap bm, FILE* saida);
 bitmap inverte_bm(bitmap *bm);
 void escreve_compacta(bitmap *vet_bm, unsigned char* buffer, FILE* saida);
 void concatena_saida(char* destino, char* argv);
-void faz_caminho_arv(Arv* arv, FILE* saida, bitmap *bm_arv);
 void escreve_tam_arq_compactado(bitmap *vet_bm, unsigned char* buffer, FILE* saida);
-
+void extensao(char* ext, char* origem);
+void imprime_caracter_freq(Arv* arv, FILE* saida);
 #endif /* COMPACTADOR_H */
 
