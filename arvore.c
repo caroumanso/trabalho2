@@ -78,3 +78,7 @@ int arv_altura(Arv* a) {
         return 1 + max2(arv_altura(a->esq),
             arv_altura(a->dir));
 }
+
+int retorna_freq(Arv* arv){
+    return arv->freq;
+}

@@ -78,7 +78,7 @@ void compacta(int qtd, unsigned char* buffer, Arv* arv, int* vet_freq, char* arg
     int tam_extensao = strlen(ext);
     fwrite(&tam_extensao, sizeof (int), 1, saida);
     fwrite(ext, sizeof (char), tam_extensao, saida);
-    int freq_total = arv->freq;
+    int freq_total = retorna_freq(arv);
     fwrite(&freq_total, sizeof (int), 1, saida);
     imprime_caracter_freq(arv, saida);
     escreve_tam_arq_compactado(vet_bm, buffer, saida);
@@ -168,11 +168,22 @@ void extensao(char* ext, char* origem) {
 
 void imprime_caracter_freq(Arv* arv, FILE* saida) {
     if(eh_no_de_folha(arv)){
-        fwrite();
-        fwrite();
+        bitmap bm_arv = bitmapInit(8);
+        int i;
+        for(i = 0; 8>i; i++){
+            int bit = (retorna_caracter(arv) >> i & 0x01);
+            if(bit == 0)
+                bitmapAppendLeastSignificantBit(&bm_arv, 0);
+            else
+                bitmapAppendLeastSignificantBit(&bm_arv, 1);
+        }
+        escreve_bm(bm_arv, saida);
+        free(bitmapGetContents(bm_arv));
+        int freq = retorna_freq(arv);
+        fwrite(&freq, sizeof(int), 1, saida);
     }
     else if(!arv_vazia(arv)){
-        imprime_caracter_freq(arv->esq, saida);
-        imprime_caracter_freq(arv->dir, saida);
+        imprime_caracter_freq(retorna_arv_esq(arv), saida);
+        imprime_caracter_freq(retorna_arv_dir(arv), saida);
     }
 }
