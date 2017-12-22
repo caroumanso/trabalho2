@@ -14,5 +14,7 @@ int eh_no_de_folha(Arv* arv);
 unsigned char retorna_caracter(Arv* arv);
 Arv* retorna_arv_esq(Arv* arv);
 Arv* retorna_arv_dir(Arv* arv);
+int arv_altura(Arv* a);
+static int max2(int a, int b);
 
 #endif /* ARVORE_H */

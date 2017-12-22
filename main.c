@@ -3,7 +3,6 @@
 #include <string.h>
 #include "arvore.h"
 #include "lista.h"
-#include "bitmap.h"
 #include "compactador.h"
 #define TAM 256
 void inic_vet(int *vet, int tam);
@@ -11,23 +10,14 @@ void inic_vet(int *vet, int tam);
 int main(int argc, char** argv) {
     int vet[TAM];
     inic_vet(vet, TAM);
-    char caminho[110];
-    strcpy(caminho, argv[1]);
-    FILE* arq;
-    if ((arq = fopen(caminho, "rb")) == NULL) {
-        printf("erro na abertura do arquivo de entrada\n");
-        exit(1);
-    }
-    unsigned char* buffer = le_arq(arq);
+    unsigned char* buffer = le_arq(argv[1]);
     soma_freq(vet, buffer);
     Lista* lista = inic_lista();
     faz_lista(vet, TAM, lista);
     ordena_lista(lista);
     faz_arv_huffman(lista);
-    bitmap vet_bm[TAM];
-    faz_chave_busca(vet_bm, retorna_arv(lista), vet, TAM);
-    compacta(vet_bm, TAM, buffer, retorna_arv(lista), vet);
-    libera_compacta(lista, buffer, vet_bm);
+    compacta(TAM, buffer, retorna_arv(lista), vet, argv[1]);
+    libera_lista(lista);
     return (EXIT_SUCCESS);
 }
 

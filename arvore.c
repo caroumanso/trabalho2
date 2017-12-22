@@ -59,10 +59,22 @@ unsigned char retorna_caracter(Arv* arv) {
     return arv->dir->caracter;
 }
 
-Arv* retorna_arv_esq(Arv* arv){
+Arv* retorna_arv_esq(Arv* arv) {
     return arv->esq;
 }
 
-Arv* retorna_arv_dir(Arv* arv){
+Arv* retorna_arv_dir(Arv* arv) {
     return arv->dir;
+}
+
+static int max2(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int arv_altura(Arv* a) {
+    if (arv_vazia(a))
+        return -1;
+    else
+        return 1 + max2(arv_altura(a->esq),
+            arv_altura(a->dir));
 }

@@ -14,10 +14,18 @@ int tam_arq(FILE* file) {
     return tam;
 }
 
-unsigned char* le_arq(FILE* file) {
-    char* buffer = (char*) malloc((tam_arq(file)) * sizeof (unsigned char));
-    fread(buffer, sizeof (char), tam_arq(file), file);
-    fclose(file);
+unsigned char* le_arq(char* argv) {
+    char caminho[110];
+    strcpy(caminho, argv);
+    FILE* arq;
+    arq = fopen(caminho, "rb");
+    if (arq == NULL) {
+        printf("erro na abertura do arquivo de entrada\n");
+        exit(1);
+    }
+    char* buffer = (char*) malloc((tam_arq(arq)) * sizeof (unsigned char));
+    fread(buffer, sizeof (char), tam_arq(arq), arq);
+    fclose(arq);
     return buffer;
 }
 
@@ -44,60 +52,118 @@ int codifica(bitmap *cod, unsigned char c, Arv* arv) {
 }
 
 void faz_chave_busca(bitmap* vet_bm, Arv* arv, int *vet, int tam) {
-    int i;
+    int i, tam_bitmap = arv_altura(arv);
     for (i = 0; tam > i; i++) {
-        vet_bm[i] = bitmapInit(10);
+        vet_bm[i] = bitmapInit(tam_bitmap);
         if (vet[i] != 0) {
             codifica(&vet_bm[i], i, arv);
-            inverte_bm(&vet_bm[i]);
+            vet_bm[i] = inverte_bm(&vet_bm[i]);
         }
     }
 }
 
-    void compacta(bitmap* vet_bm, int qtd, unsigned char* buffer, Arv* arv, int* vet_freq) {
-        int i;
-        FILE* saida;
-        if ((saida = fopen("colocar_o_caminho.comp", "w")) == NULL) {
-            printf("erro na abertura do arquivo de saida\n");
-            exit(1);
-        }
-        for (i = 0; 256 > i; i++){
-            if(vet_freq[i] != 0){
-                fprintf(saida, "%d %d ", i, vet_freq[i]);
+void compacta(int qtd, unsigned char* buffer, Arv* arv, int* vet_freq, char* argv) {
+    bitmap vet_bm[qtd];
+    faz_chave_busca(vet_bm, arv, vet_freq, qtd);
+    FILE* saida;
+    char arq_saida[100];
+    concatena_saida(arq_saida, argv);
+    saida = fopen(arq_saida, "wb");
+    if (saida == NULL) {
+        printf("erro na abertura do arquivo de saida\n");
+        exit(1);
+    }
+    int tam_argv = strlen(argv);
+    fwrite(&tam_argv, sizeof(int), 1, saida);
+    fwrite(argv, sizeof(char), strlen(argv), saida);
+    bitmap bm_arv = bitmapInit(1024*1024);
+    faz_caminho_arv(arv, saida, &bm_arv);
+    if(bitmapGetLength(bm_arv)>0)
+        escreve_bm(bm_arv, saida);
+    escreve_tam_arq_compactado(vet_bm, buffer, saida);
+    escreve_compacta(vet_bm, buffer, saida);
+    libera_compacta(buffer, vet_bm);
+    fclose(saida);
+}
+
+void libera_compacta(unsigned char* buffer, bitmap * vet_bm) {
+    int i;
+     for (i = 0; 256 > i; i++)
+      free(bitmapGetContents(vet_bm[i]));
+    free(buffer);
+}
+
+void escreve_bm(bitmap bm, FILE * saida) {
+    if (bitmapGetLength(bm) % 8 == 0)
+        fwrite(bitmapGetContents(bm), sizeof (unsigned char), bitmapGetLength(bm) / 8, saida);
+    else
+        fwrite(bitmapGetContents(bm), sizeof (unsigned char), (bitmapGetLength(bm) / 8) + 1, saida);
+}
+
+bitmap inverte_bm(bitmap * bm) {
+    int i;
+    bitmap aux = bitmapInit(bitmapGetMaxSize(*bm));
+    for (i = 0; bitmapGetLength(*bm) > i; i++) {
+        bitmapAppendLeastSignificantBit(&aux, bitmapGetBit(*bm, bitmapGetLength(*bm) - 1 - i));
+    }
+    free(bitmapGetContents(*bm));
+    return aux;
+}
+
+void escreve_compacta(bitmap *vet_bm, unsigned char* buffer, FILE* saida){
+    int i, k;
+    bitmap vet_saida = bitmapInit(12*1024*1024);
+    for (i = 0; strlen(buffer) > i; i++) {
+        for (k = 0; bitmapGetLength(vet_bm[buffer[i]]) > k; k++) {
+            if(bitmapGetMaxSize(vet_saida) == bitmapGetLength(vet_saida)){
+                escreve_bm(vet_saida, saida);
+                free(bitmapGetContents(vet_saida));
+                vet_saida = bitmapInit(5*1024*1024);
             }
-
+            bitmapAppendLeastSignificantBit(&vet_saida, bitmapGetBit(vet_bm[buffer[i]], k));
         }
-
-
-        for (i = 0; strlen(buffer) > i; i++)
-            escreve_bm(vet_bm[buffer[i]], saida);
-        fclose(saida);
     }
+    if(bitmapGetLength(vet_saida)>0)
+            escreve_bm(vet_saida, saida);
+}
 
-    void libera_compacta(Lista* l, unsigned char* buffer, bitmap * vet_bm) {
+void concatena_saida(char* destino, char* argv){
+    int i;
+    for(i = strlen(argv);i>=0;i--){
+        if(argv[i] == '.')
+            break;
+    }
+    char aux[100];
+    strcpy(aux, argv);
+    aux[i+1] = '\0';
+    sprintf(destino, "%s%s", aux,"comp");
+}
+
+void faz_caminho_arv(Arv* arv, FILE* saida, bitmap *bm_arv) {
+    
+    if (eh_no_de_folha(arv)) {
+        bitmapAppendLeastSignificantBit(bm_arv, 1);
         int i;
-        for (i = 0; 256 > i; i++)
-            libera_bm(vet_bm[i]);
-        libera_lista(l);
-        free(buffer);
+        for(i = 7; i>=0;i--){
+            int bt = (retorna_caracter(arv) >> i & 0x01);
+            if(bt == 0)
+                bitmapAppendLeastSignificantBit(bm_arv, 0);
+            else
+                bitmapAppendLeastSignificantBit(bm_arv, 1);
+        }
+    } else if (!arv_vazia(arv)) {
+        bitmapAppendLeastSignificantBit(bm_arv, 0);
+        faz_caminho_arv(retorna_arv_esq(arv), saida, bm_arv);
+        faz_caminho_arv(retorna_arv_dir(arv), saida, bm_arv);
     }
+}
 
-    void libera_bm(bitmap bm) {
-        //if (bitmapGetContents(bm) != NULL)
-            //free(bm.contents);
+void escreve_tam_arq_compactado(bitmap *vet_bm, unsigned char* buffer, FILE* saida){
+    int i, k;
+    long int tam = 0;
+    for (i = 0; strlen(buffer) > i; i++) {
+        for (k = 0; bitmapGetLength(vet_bm[buffer[i]]) > k; k++)
+            tam++;
     }
-
-    void escreve_bm(bitmap bm, FILE * saida) {
-        
-        fwrite(bitmapGetContents(bm), sizeof (unsigned char), bitmapGetLength(bm), saida);
-    }
-
-    void inverte_bm(bitmap *bm) {
-        int i;
-        bitmap aux = bitmapInit(bitmapGetMaxSize(*bm));
-        aux.length = bitmapGetLength(*bm);
-        aux.contents = bitmapGetContents(*bm);
-        for(i = 0; bitmapGetLength(*bm)>i;i++)
-            bitmapSetBit(bm, i, bitmapGetBit(aux, bitmapGetLength(aux)-1-i));
-        libera_bm(aux);
-    }
+    fwrite(&tam, sizeof(long int), 1, saida);
+}
