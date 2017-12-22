@@ -15,16 +15,14 @@ int tam_arq(FILE* file) {
 }
 
 unsigned char* le_arq(char* argv) {
-    char caminho[110];
-    strcpy(caminho, argv);
     FILE* arq;
-    arq = fopen(caminho, "rb");
+    arq = fopen(argv, "rb");
     if (arq == NULL) {
         printf("erro na abertura do arquivo de entrada\n");
         exit(1);
     }
-    char* buffer = (char*) malloc((tam_arq(arq)) * sizeof (unsigned char));
-    fread(buffer, sizeof (char), tam_arq(arq), arq);
+    unsigned char* buffer = (unsigned char*) malloc((tam_arq(arq)) * sizeof (unsigned char));
+    fread(buffer, sizeof (unsigned char), tam_arq(arq), arq);
     fclose(arq);
     return buffer;
 }
