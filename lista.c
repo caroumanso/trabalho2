@@ -58,6 +58,18 @@ void ordena_lista(Lista* l) {
     }
 }
 
+void ordena_lista_caracter(Lista* l){
+    Celula* p, *q;
+    for(p = l->ini; p != NULL; p = p->prox){
+        for(q = p->prox; q!=NULL; q= q->prox){
+            if(arv_freq(q->arvore) == arv_freq(p->arvore)){
+                if(retorna_caracter(q->arvore) > retorna_caracter(p->arvore))
+                    troca_arv(p, q);
+            }
+        }
+    }
+}
+
 void troca_arv(Celula* p, Celula* q) {
     Arv* aux = p->arvore;
     p->arvore = q->arvore;

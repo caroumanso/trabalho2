@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
     Lista* lista = inic_lista();
     faz_lista(vet, TAM, lista);
     ordena_lista(lista);
+    ordena_lista_caracter(lista);
     faz_arv_huffman(lista);
     compacta(TAM, buffer, retorna_arv(lista), vet, argv[1]);
     libera_lista(lista);

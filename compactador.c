@@ -76,7 +76,7 @@ void compacta(int qtd, unsigned char* buffer, Arv* arv, int* vet_freq, char* arg
     int tam_extensao = strlen(ext);
     fwrite(&tam_extensao, sizeof (int), 1, saida);
     fwrite(ext, sizeof (char), tam_extensao, saida);
-    int freq_total = retorna_freq(arv);
+    int freq_total = arv_freq(arv);
     fwrite(&freq_total, sizeof (int), 1, saida);
     imprime_caracter_freq(arv, saida);
     escreve_tam_arq_compactado(vet_bm, buffer, saida);
@@ -168,7 +168,7 @@ void imprime_caracter_freq(Arv* arv, FILE* saida) {
     if(eh_no_de_folha(arv)){
         unsigned char c = retorna_caracter(arv);
         fwrite(&c, sizeof(unsigned char), 1, saida);
-        int freq = retorna_freq(arv);
+        int freq = arv_freq(arv);
         fwrite(&freq, sizeof(int), 1, saida);
     }
     else if(!arv_vazia(arv)){
