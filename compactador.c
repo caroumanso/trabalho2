@@ -166,17 +166,8 @@ void extensao(char* ext, char* origem) {
 
 void imprime_caracter_freq(Arv* arv, FILE* saida) {
     if(eh_no_de_folha(arv)){
-        bitmap bm_arv = bitmapInit(8);
-        int i;
-        for(i = 0; 8>i; i++){
-            int bit = (retorna_caracter(arv) >> i & 0x01);
-            if(bit == 0)
-                bitmapAppendLeastSignificantBit(&bm_arv, 0);
-            else
-                bitmapAppendLeastSignificantBit(&bm_arv, 1);
-        }
-        escreve_bm(bm_arv, saida);
-        free(bitmapGetContents(bm_arv));
+        unsigned char c = retorna_caracter(arv);
+        fwrite(&c, sizeof(unsigned char), 1, saida);
         int freq = retorna_freq(arv);
         fwrite(&freq, sizeof(int), 1, saida);
     }

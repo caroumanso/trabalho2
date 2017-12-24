@@ -17,5 +17,6 @@ Arv* retorna_arv_dir(Arv* arv);
 int arv_altura(Arv* a);
 static int max2(int a, int b);
 int retorna_freq(Arv* arv);
+int qtd_folhas(Arv* a);
 
 #endif /* ARVORE_H */
