@@ -60,7 +60,7 @@ Lista* reconstroi_arv(FILE* entrada) {
 }
 
 void descompacta(Arv* arv, FILE* saida, FILE* entrada) {
-    bitmap c = bitmapInit(8);
+    bitmap c = bitmapInit(arv_altura(arv));
     int tam_compactado, qtd_lidos = 0, i, k;
     fread(&tam_compactado, sizeof  (long int), 1, entrada);
     int qtd_bytes = (bits_totais(tam_compactado)) / 8;
@@ -74,7 +74,7 @@ void descompacta(Arv* arv, FILE* saida, FILE* entrada) {
             qtd_lidos++;
             if (seguencia_eh_caracter(c, arv, saida, 0)) {
                 free(bitmapGetContents(c));
-                c = bitmapInit(8);
+                c = bitmapInit(arv_altura(arv));
             }
         }
     }
